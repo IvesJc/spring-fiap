@@ -1,10 +1,14 @@
 package com.example.demo.gateways;
 
 import com.example.demo.domains.Aluno;
+import com.example.demo.domains.Pessoa;
 import com.example.demo.domains.Professor;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import com.example.demo.gateways.requests.ProfessorRequestDTO;
+import com.example.demo.gateways.responses.ProfessorResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +26,24 @@ public class ProfessorController {
     private final AlunoRepository alunoRepository;
 
     @PostMapping
-    public Professor criaProfessor(@RequestBody Professor professor) {
-        return professorRepository.save(professor);
+    public ProfessorResponseDTO criaProfessor(@RequestBody ProfessorRequestDTO professorRequestDTO) {
+        Professor professorASerCriado = Professor.builder()
+                .materia(professorRequestDTO.materia())
+                .alunos(professorRequestDTO.alunoList())
+                .pessoa(Pessoa.builder().
+                        primeiroNome(professorRequestDTO.primeiroNome()).
+                        sobrenome(professorRequestDTO.sobrenome()).
+                        documento(professorRequestDTO.documento()).
+                        build()).build();
+
+        Professor professorCriado = professorRepository.save(professorASerCriado);
+
+
+        return ProfessorResponseDTO.builder()
+                .materia(professorCriado.getMateria())
+                .primeiroNome(professorCriado.getPessoa().getPrimeiroNome())
+                .sobrenome(professorCriado.getPessoa().getSobrenome())
+                .aluno(professorCriado.getAlunos()).build();
     }
 
     @PatchMapping("/{professorId}/alunos")

@@ -53,4 +53,7 @@ public class Aluno {
 
   @OneToOne(cascade = CascadeType.ALL)
   private Pessoa pessoa;
+
+  @ManyToOne()
+  private Professor professor;
 }

@@ -26,7 +26,7 @@ public class Professor {
     private Pessoa pessoa;
 
     @OneToMany(
-//            mappedBy =
+            mappedBy = "professor"
     )
     // mappedBy = é utilizado quando temos um relacionamento bidirecional mapeado entre duas classes e
     // informar o nome do atributo da classe utilizada no mapeamento na outra ponta do relacionamento.
